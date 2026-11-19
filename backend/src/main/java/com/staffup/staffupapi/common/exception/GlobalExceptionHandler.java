@@ -1,16 +1,23 @@
 package com.staffup.staffupapi.common.exception;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ProblemDetail;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 @RestControllerAdvice
-public class GlobalExceptionHandler {
+public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+
+    // ===== Nos exceptions métier =====
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ProblemDetail handleNotFound(ResourceNotFoundException ex) {
@@ -26,23 +33,28 @@ public class GlobalExceptionHandler {
         return problem;
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ProblemDetail handleValidation(MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new LinkedHashMap<>();
-        ex.getBindingResult().getFieldErrors()
-                .forEach(err -> errors.putIfAbsent(err.getField(), err.getDefaultMessage()));
-
-        ProblemDetail problem = ProblemDetail.forStatusAndDetail(
-                HttpStatus.BAD_REQUEST, "La requête contient des champs invalides");
-        problem.setTitle("Erreur de validation");
-        problem.setProperty("errors", errors);
-        return problem;
-    }
-
     @ExceptionHandler(BusinessRuleException.class)
     public ProblemDetail handleBusinessRule(BusinessRuleException ex) {
         ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
         problem.setTitle("Règle métier non respectée");
         return problem;
+    }
+
+    // ===== Surcharge de la gestion de validation de Spring =====
+
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+                                                                  HttpHeaders headers,
+                                                                  HttpStatusCode status,
+                                                                  WebRequest request) {
+        Map<String, String> errors = new LinkedHashMap<>();
+        ex.getBindingResult().getFieldErrors()
+                .forEach(err -> errors.putIfAbsent(err.getField(), err.getDefaultMessage()));
+
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(status, "La requête contient des champs invalides");
+        problem.setTitle("Erreur de validation");
+        problem.setProperty("errors", errors);
+
+        return handleExceptionInternal(ex, problem, headers, status, request);
     }
 }

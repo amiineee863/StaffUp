@@ -1,13 +1,11 @@
 package com.staffup.staffupapi;
 
+import com.staffup.staffupapi.support.AbstractIntegrationTest;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
-class StaffUpApplicationTests {
+class StaffUpApplicationTests extends AbstractIntegrationTest {
 
     @Test
     void contextLoads() {
     }
-
 }
