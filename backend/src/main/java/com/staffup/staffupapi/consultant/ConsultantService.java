@@ -82,6 +82,10 @@ public class ConsultantService {
                 .orElseThrow(() -> new ResourceNotFoundException("Consultant", id));
     }
 
+    public Consultant getEntity(Long id) {
+        return getOrThrow(id);
+    }
+
     private void applyRequest(Consultant c, ConsultantRequest r, String normalizedEmail) {
         c.setFirstName(r.firstName().trim());
         c.setLastName(r.lastName().trim());

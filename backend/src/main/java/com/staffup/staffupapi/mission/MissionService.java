@@ -61,6 +61,10 @@ public class MissionService {
                 .orElseThrow(() -> new ResourceNotFoundException("Mission", id));
     }
 
+    public Mission getEntity(Long id) {
+        return getOrThrow(id);
+    }
+
     private void applyRequest(Mission mission, MissionRequest r) {
         if (r.endDate() != null && r.endDate().isBefore(r.startDate())) {
             throw new BusinessRuleException("La date de fin doit être postérieure ou égale à la date de début");
