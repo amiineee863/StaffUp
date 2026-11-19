@@ -1,0 +1,6 @@
+INSERT INTO consultant (first_name, last_name, email, job_title, seniority, available_from, created_at, updated_at) VALUES
+                                                                                                                        ('Sarah',  'Lefebvre', 'sarah.lefebvre@staffup.dev', 'Développeuse Java',        'CONFIRMED', '2027-01-05', now(), now()),
+                                                                                                                        ('Karim',  'Benali',   'karim.benali@staffup.dev',   'Développeur Full Stack',   'SENIOR',    '2026-12-01', now(), now()),
+                                                                                                                        ('Julie',  'Martin',   'julie.martin@staffup.dev',   'Développeuse Front React', 'JUNIOR',    NULL,         now(), now()),
+                                                                                                                        ('Thomas', 'Dubois',   'thomas.dubois@staffup.dev',  'Architecte Cloud',         'EXPERT',    '2027-02-15', now(), now()),
+                                                                                                                        ('Inès',   'Moreau',   'ines.moreau@staffup.dev',    'Ingénieure DevOps',        'CONFIRMED', '2026-12-15', now(), now());

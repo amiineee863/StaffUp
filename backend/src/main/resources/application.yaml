@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: staffup-api
+  config:
+    import: optional:file:.env[.properties]
+  datasource:
+    url: jdbc:postgresql://localhost:${POSTGRES_PORT:5432}/${POSTGRES_DB:staffup}
+    username: ${POSTGRES_USER:staffup}
+    password: ${POSTGRES_PASSWORD:staffup}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  mvc:
+    problemdetails:
+      enabled: true
+  docker:
+    compose:
+      lifecycle-management: start-only
+
+springdoc:
+  swagger-ui:
+    operations-sorter: method
