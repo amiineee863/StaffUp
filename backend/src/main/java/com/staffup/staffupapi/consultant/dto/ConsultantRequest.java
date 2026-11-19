@@ -16,4 +16,8 @@ public record ConsultantRequest(
         @NotNull Seniority seniority,
         LocalDate availableFrom
 ) {
+    /** Constructeur compact : s'exécute à la création du record, donc AVANT la validation. */
+    public ConsultantRequest {
+        email = (email == null) ? null : email.trim();
+    }
 }

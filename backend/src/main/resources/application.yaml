@@ -14,9 +14,6 @@ spring:
     properties:
       hibernate:
         default_batch_fetch_size: 50
-  mvc:
-    problemdetails:
-      enabled: true
   docker:
     compose:
       lifecycle-management: start-only
