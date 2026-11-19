@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springdoc.core.annotations.ParameterObject;
 import com.staffup.staffupapi.consultant.dto.ConsultantSkillRequest;
-
+import org.springframework.security.access.prepost.PreAuthorize;
 import java.net.URI;
 
 @RestController
@@ -64,6 +64,7 @@ public class ConsultantController {
     }
 
     @PutMapping("/{id}/skills/{skillId}")
+    @PreAuthorize("@consultantAccess.canEdit(authentication, #id)")
     @Operation(summary = "Ajouter une compétence à un consultant ou modifier son niveau")
     public ConsultantResponse setSkill(@PathVariable Long id,
                                        @PathVariable Long skillId,
@@ -72,6 +73,7 @@ public class ConsultantController {
     }
 
     @DeleteMapping("/{id}/skills/{skillId}")
+    @PreAuthorize("@consultantAccess.canEdit(authentication, #id)")
     @Operation(summary = "Retirer une compétence d'un consultant")
     public ResponseEntity<Void> removeSkill(@PathVariable Long id, @PathVariable Long skillId) {
         service.removeSkill(id, skillId);
