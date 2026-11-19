@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springdoc.core.annotations.ParameterObject;
+import com.staffup.staffupapi.consultant.dto.ConsultantSkillRequest;
 
 import java.net.URI;
 
@@ -59,6 +60,21 @@ public class ConsultantController {
     @Operation(summary = "Supprimer un consultant")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}/skills/{skillId}")
+    @Operation(summary = "Ajouter une compétence à un consultant ou modifier son niveau")
+    public ConsultantResponse setSkill(@PathVariable Long id,
+                                       @PathVariable Long skillId,
+                                       @Valid @RequestBody ConsultantSkillRequest request) {
+        return service.setSkill(id, skillId, request.level());
+    }
+
+    @DeleteMapping("/{id}/skills/{skillId}")
+    @Operation(summary = "Retirer une compétence d'un consultant")
+    public ResponseEntity<Void> removeSkill(@PathVariable Long id, @PathVariable Long skillId) {
+        service.removeSkill(id, skillId);
         return ResponseEntity.noContent().build();
     }
 }

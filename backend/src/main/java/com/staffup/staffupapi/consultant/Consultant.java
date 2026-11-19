@@ -1,19 +1,23 @@
 package com.staffup.staffupapi.consultant;
 
+import com.staffup.staffupapi.common.AuditableEntity;
+import com.staffup.staffupapi.skill.Skill;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.Instant;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "consultant")
 @Getter
 @Setter
 @NoArgsConstructor
-public class Consultant {
+public class Consultant extends AuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,21 +42,23 @@ public class Consultant {
     @Column(name = "available_from")
     private LocalDate availableFrom;
 
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private Instant createdAt;
+    @Setter(AccessLevel.NONE)
+    @OneToMany(mappedBy = "consultant", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ConsultantSkill> skills = new HashSet<>();
 
-    @Column(name = "updated_at", nullable = false)
-    private Instant updatedAt;
-
-    @PrePersist
-    void onCreate() {
-        Instant now = Instant.now();
-        this.createdAt = now;
-        this.updatedAt = now;
+    /** Ajoute la compétence, ou met à jour son niveau si le consultant l'a déjà. */
+    public void setSkillLevel(Skill skill, int level) {
+        skills.stream()
+                .filter(cs -> cs.getSkill().getId().equals(skill.getId()))
+                .findFirst()
+                .ifPresentOrElse(
+                        cs -> cs.setLevel(level),
+                        () -> skills.add(new ConsultantSkill(this, skill, level))
+                );
     }
 
-    @PreUpdate
-    void onUpdate() {
-        this.updatedAt = Instant.now();
+    /** @return true si la compétence a été retirée, false si le consultant ne l'avait pas. */
+    public boolean removeSkill(Long skillId) {
+        return skills.removeIf(cs -> cs.getSkill().getId().equals(skillId));
     }
 }
