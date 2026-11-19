@@ -10,6 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.staffup.staffupapi.skill.Skill;
+import com.staffup.staffupapi.skill.SkillService;
 
 @Service
 @RequiredArgsConstructor
@@ -17,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ConsultantService {
 
     private final ConsultantRepository repository;
+    private final SkillService skillService;
 
     public PageResponse<ConsultantResponse> findAll(String search, Pageable pageable) {
         Page<Consultant> page = (search == null || search.isBlank())
@@ -55,6 +58,23 @@ public class ConsultantService {
     @Transactional
     public void delete(Long id) {
         repository.delete(getOrThrow(id));
+    }
+
+    @Transactional
+    public ConsultantResponse setSkill(Long consultantId, Long skillId, int level) {
+        Consultant consultant = getOrThrow(consultantId);
+        Skill skill = skillService.getEntity(skillId);
+        consultant.setSkillLevel(skill, level);
+        return ConsultantResponse.from(consultant);
+    }
+
+    @Transactional
+    public void removeSkill(Long consultantId, Long skillId) {
+        Consultant consultant = getOrThrow(consultantId);
+        if (!consultant.removeSkill(skillId)) {
+            throw new ResourceNotFoundException(
+                    "Le consultant " + consultantId + " ne possède pas la compétence " + skillId);
+        }
     }
 
     private Consultant getOrThrow(Long id) {
