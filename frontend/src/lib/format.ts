@@ -32,3 +32,11 @@ export function formatDate(isoDate: string | null | undefined): string {
     const [year, month, day] = isoDate.slice(0, 10).split("-");
     return `${day}/${month}/${year}`;
 }
+
+/** Date du jour au format ISO "AAAA-MM-JJ", dans le fuseau du navigateur. */
+export function todayIso(): string {
+    const now = new Date();
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    const day = String(now.getDate()).padStart(2, "0");
+    return `${now.getFullYear()}-${month}-${day}`;
+}
