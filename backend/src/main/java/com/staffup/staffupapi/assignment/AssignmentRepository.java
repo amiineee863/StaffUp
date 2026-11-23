@@ -37,4 +37,12 @@ public interface AssignmentRepository extends JpaRepository<Assignment, Long> {
     @Override
     @EntityGraph(attributePaths = {"consultant", "mission"})
     List<Assignment> findAll(Sort sort);
+
+    /** Ids des consultants ayant au moins une affectation qui chevauche [start, end]. */
+    @Query("""
+            select distinct a.consultant.id from Assignment a
+            where a.startDate <= :end
+              and a.endDate >= :start
+            """)
+    List<Long> findBusyConsultantIds(@Param("start") LocalDate start, @Param("end") LocalDate end);
 }
