@@ -11,3 +11,11 @@ export function getErrorMessage(error: unknown, fallback = "Une erreur est surve
     }
     return fallback;
 }
+
+/** Erreurs de validation par champ renvoyées par l'API (400), ex. { email: "doit être une adresse valide" }. */
+export function getFieldErrors(error: unknown): Record<string, string> | undefined {
+    if (isAxiosError<ProblemDetail>(error)) {
+        return error.response?.data?.errors;
+    }
+    return undefined;
+}
