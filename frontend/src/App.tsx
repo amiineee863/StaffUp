@@ -8,6 +8,8 @@ import LoginPage from "./pages/LoginPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import ConsultantDetailPage from "./pages/consultants/ConsultantDetailPage";
 import ConsultantsPage from "./pages/consultants/ConsultantsPage";
+import MissionDetailPage from "./pages/missions/MissionDetailPage";
+import MissionsPage from "./pages/missions/MissionsPage";
 
 export default function App() {
   return (
@@ -26,7 +28,8 @@ export default function App() {
 
               <Route path="consultants" element={<ConsultantsPage />} />
               <Route path="consultants/:id" element={<ConsultantDetailPage />} />
-            <Route path="missions" element={<ComingSoonPage title="Missions" />} />
+              <Route path="missions" element={<MissionsPage />} />
+              <Route path="missions/:id" element={<MissionDetailPage />} />
             <Route path="assignments" element={<ComingSoonPage title="Affectations" />} />
           </Route>
         </Route>
