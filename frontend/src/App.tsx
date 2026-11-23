@@ -6,6 +6,8 @@ import ComingSoonPage from "./pages/ComingSoonPage";
 import DashboardPage from "./pages/DashboardPage";
 import LoginPage from "./pages/LoginPage";
 import NotFoundPage from "./pages/NotFoundPage";
+import ConsultantDetailPage from "./pages/consultants/ConsultantDetailPage";
+import ConsultantsPage from "./pages/consultants/ConsultantsPage";
 
 export default function App() {
   return (
@@ -22,7 +24,8 @@ export default function App() {
               <Route path="dashboard" element={<DashboardPage />} />
             </Route>
 
-            <Route path="consultants" element={<ComingSoonPage title="Consultants" />} />
+              <Route path="consultants" element={<ConsultantsPage />} />
+              <Route path="consultants/:id" element={<ConsultantDetailPage />} />
             <Route path="missions" element={<ComingSoonPage title="Missions" />} />
             <Route path="assignments" element={<ComingSoonPage title="Affectations" />} />
           </Route>
