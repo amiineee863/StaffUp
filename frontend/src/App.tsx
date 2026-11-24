@@ -11,6 +11,7 @@ import LoginPage from "./pages/LoginPage";
 import MissionDetailPage from "./pages/missions/MissionDetailPage";
 import MissionsPage from "./pages/missions/MissionsPage";
 import NotFoundPage from "./pages/NotFoundPage";
+import MissionAnalysisPage from "./pages/analysis/MissionAnalysisPage";
 
 // Le dashboard embarque la librairie de graphiques : on ne la télécharge
 // que lorsqu'un manager ouvre réellement cette page.
@@ -34,6 +35,7 @@ export default function App() {
                                 </Suspense>
                             }
                         />
+                        <Route path="analysis" element={<MissionAnalysisPage />} />
                     </Route>
 
                     <Route path="consultants" element={<ConsultantsPage />} />

@@ -1,4 +1,4 @@
-import { Briefcase, CalendarRange, LayoutDashboard, LogOut, Users, type LucideIcon } from "lucide-react";
+import { Briefcase, CalendarRange, LayoutDashboard, LogOut, Sparkles, Users, type LucideIcon } from "lucide-react";
 import { NavLink, Outlet } from "react-router";
 import type { Role } from "../api/types";
 import { useAuth } from "../auth/useAuth";
@@ -15,6 +15,7 @@ const NAV_ITEMS: NavItem[] = [
     { to: "/consultants", label: "Consultants", icon: Users },
     { to: "/missions", label: "Missions", icon: Briefcase },
     { to: "/assignments", label: "Affectations", icon: CalendarRange },
+    { to: "/analysis", label: "Analyse IA", icon: Sparkles, roles: ["ADMIN", "MANAGER"] },
 ];
 
 const ROLE_LABELS: Record<Role, string> = {
