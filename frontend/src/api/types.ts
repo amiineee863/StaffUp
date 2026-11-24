@@ -185,3 +185,22 @@ export interface DashboardResponse {
     upcomingAvailabilities: UpcomingAvailability[];
     skillDemand: SkillGap[];
 }
+
+// ===== Analyse IA =====
+
+export type ExtractionEngine = "LLM" | "KEYWORDS";
+
+export interface MissionAnalysisRequest {
+    description: string;
+    startDate: string | null;
+    endDate: string | null;
+    limit?: number;
+}
+
+export interface MissionAnalysisResponse {
+    engine: ExtractionEngine;
+    summary: string | null;
+    skills: Skill[];
+    otherSkills: string[];
+    matches: ConsultantMatch[];
+}

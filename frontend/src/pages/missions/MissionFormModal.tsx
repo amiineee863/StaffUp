@@ -31,15 +31,25 @@ const missionSchema = z
 
 type MissionFormValues = z.infer<typeof missionSchema>;
 
-function toFormValues(mission?: Mission): MissionFormValues {
+/** Valeurs pré-remplies pour une création (ex. depuis l'analyse IA). */
+export interface MissionDraft {
+    description?: string;
+    startDate?: string;
+    endDate?: string;
+    requiredSkillIds?: number[];
+}
+
+function toFormValues(mission?: Mission, draft?: MissionDraft): MissionFormValues {
     return {
         title: mission?.title ?? "",
         clientName: mission?.clientName ?? "",
-        description: mission?.description ?? "",
-        startDate: mission?.startDate ?? "",
-        endDate: mission?.endDate ?? "",
+        description: mission?.description ?? draft?.description ?? "",
+        startDate: mission?.startDate ?? draft?.startDate ?? "",
+        endDate: mission?.endDate ?? draft?.endDate ?? "",
         status: mission?.status ?? "OPEN",
-        requiredSkillIds: mission?.requiredSkills.map((s) => String(s.id)) ?? [],
+        requiredSkillIds: mission
+            ? mission.requiredSkills.map((s) => String(s.id))
+            : (draft?.requiredSkillIds ?? []).map(String),
     };
 }
 
@@ -47,10 +57,11 @@ interface MissionFormModalProps {
     open: boolean;
     onClose: () => void;
     mission?: Mission;
+    draft?: MissionDraft;
     onSaved?: (mission: Mission) => void;
 }
 
-export function MissionFormModal({ open, onClose, mission, onSaved }: MissionFormModalProps) {
+export function MissionFormModal({ open, onClose, mission, draft, onSaved }: MissionFormModalProps) {
     const queryClient = useQueryClient();
     const isEdit = mission !== undefined;
 
@@ -78,7 +89,7 @@ export function MissionFormModal({ open, onClose, mission, onSaved }: MissionFor
         formState: { errors },
     } = useForm<MissionFormValues>({
         resolver: zodResolver(missionSchema),
-        defaultValues: toFormValues(mission),
+        defaultValues: toFormValues(mission, draft),
     });
 
     const {
@@ -109,10 +120,10 @@ export function MissionFormModal({ open, onClose, mission, onSaved }: MissionFor
 
     useEffect(() => {
         if (open) {
-            reset(toFormValues(mission));
+            reset(toFormValues(mission, draft));
             resetMutation();
         }
-    }, [open, mission, reset, resetMutation]);
+    }, [open, mission, draft, reset, resetMutation]);
 
     const onSubmit = (values: MissionFormValues) => {
         mutate({
